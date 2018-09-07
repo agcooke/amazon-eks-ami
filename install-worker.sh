@@ -30,6 +30,10 @@ sudo yum install -y \
   wget \
   vim
 
+if which swapoff ; then
+  sudo swapoff --all --verbose
+fi
+
 curl "https://bootstrap.pypa.io/get-pip.py" -o "get-pip.py"
 sudo python get-pip.py
 rm get-pip.py
@@ -72,6 +76,19 @@ sudo systemctl restart systemd-sysctl
 
 sudo mkdir -vp /etc/security/limits.d
 sudo mv $TEMPLATE_DIR/limits.d/* /etc/security/limits.d/
+
+################################################################################
+### System Modules #############################################################
+################################################################################
+
+sudo mkdir -vp /etc/modules-load.d
+cat <<EOF | sudo tee /etc/modules-load.d/extra_modules.conf
+nf_conntrack_ipv4
+EOF
+
+sudo systemctl daemon-reload
+sudo systemctl enable systemd-modules-load
+sudo systemctl restart systemd-modules-load
 
 ################################################################################
 ### iptables ###################################################################
