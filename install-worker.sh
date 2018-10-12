@@ -133,7 +133,6 @@ sudo rm *.sha256
 
 sudo mv -v $TEMPLATE_DIR/kubelet-kubeconfig /var/lib/kubelet/kubeconfig
 sudo mv -v $TEMPLATE_DIR/kubelet.service /etc/systemd/system/kubelet.service
-sudo mv -v $TEMPLATE_DIR/kubelet-configuration.yaml /var/lib/kubelet/kubelet-configuration.yaml
 sudo mkdir -p /etc/systemd/system/kubelet.service.d
 
 sudo systemctl daemon-reload
