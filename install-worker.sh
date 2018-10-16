@@ -96,6 +96,8 @@ sudo sed -i '/OPTIONS/d' /etc/sysconfig/docker
 sudo mkdir -vp /etc/docker
 sudo mv $TEMPLATE_DIR/dockerd.json /etc/docker/daemon.json
 
+sudo mv $TEMPLATE_DIR/docker-daemon.json /etc/docker/daemon.json
+
 # Enable docker daemon to start on boot.
 sudo systemctl daemon-reload
 sudo systemctl enable docker
