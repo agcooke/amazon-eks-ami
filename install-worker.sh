@@ -157,9 +157,10 @@ for binary in ${BINARIES[*]} ; do
 done
 sudo rm *.sha256
 
-sudo mv -v $TEMPLATE_DIR/kubelet-kubeconfig /var/lib/kubelet/kubeconfig
-sudo mv -v $TEMPLATE_DIR/kubelet.service /etc/systemd/system/kubelet.service
-sudo mv -v $TEMPLATE_DIR/kubelet-configuration.yaml /var/lib/kubelet/kubelet-configuration.yaml
+sudo mv $TEMPLATE_DIR/kubelet-kubeconfig /var/lib/kubelet/kubeconfig
+sudo chown root:root /var/lib/kubelet/kubeconfig
+sudo mv $TEMPLATE_DIR/kubelet.service /etc/systemd/system/kubelet.service
+sudo chown root:root /etc/systemd/system/kubelet.service
 sudo mkdir -p /etc/systemd/system/kubelet.service.d
 
 sudo systemctl daemon-reload
