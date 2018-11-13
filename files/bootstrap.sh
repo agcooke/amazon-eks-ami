@@ -103,11 +103,18 @@ sed -i s,_CLUSTER_NAME_,$CLUSTER_NAME,g /var/lib/kubelet/kubeconfig
 
 INTERNAL_IP=$(curl -s http://169.254.169.254/latest/meta-data/local-ipv4)
 INSTANCE_TYPE=$(curl -s http://169.254.169.254/latest/meta-data/instance-type)
+DNS_CLUSTER_IP=10.100.0.10
+if [[ $INTERNAL_IP == 10.* ]] ; then
+  DNS_CLUSTER_IP=172.20.0.10;
+fi
+echo "$(jq .clusterDNS=[\"$DNS_CLUSTER_IP\"] kubelet-config.json)" > kubelet-config.json
 
 if [[ "$USE_MAX_PODS" = "true" ]]; then
   MAX_PODS_FILE="/etc/eks/eni-max-pods.txt"
   MAX_PODS=$(grep $INSTANCE_TYPE $MAX_PODS_FILE | awk '{print $2}')
-  sed -i s,_MAX_PODS_,$MAX_PODS,g /var/lib/kubelet/kubelet-configuration.yaml
+  if [[ -n "$MAX_PODS" ]]; then
+    echo "$(jq .maxPods=$MAX_PODS kubelet-config.json)" > kubelet-config.json
+  fi
 fi
 
 cat <<EOF > /etc/systemd/system/kubelet.service.d/10-kubelet-args.conf
