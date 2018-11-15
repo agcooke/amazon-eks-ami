@@ -95,7 +95,6 @@ fi
 
 echo $B64_CLUSTER_CA | base64 -d > $CA_CERTIFICATE_FILE_PATH
 
-sed -i s,_MASTER_ENDPOINT_,$APISERVER_ENDPOINT,g /var/lib/kubelet/kubeconfig
 kubectl config \
   --kubeconfig /var/lib/kubelet/kubeconfig \
   set-cluster \

@@ -68,6 +68,7 @@ sudo systemctl mask ntpd
 sudo mv $TEMPLATE_DIR/ntpdate-sync.* /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable ntpdate-sync.timer
+sudo systemctl restart ntpdate-sync.timer
 
 ################################################################################
 ### System Modules #############################################################
@@ -133,9 +134,6 @@ sudo usermod -aG docker $USER
 sudo sed -i '/OPTIONS/d' /etc/sysconfig/docker
 sudo mkdir -vp /etc/docker
 sudo mv $TEMPLATE_DIR/dockerd.json /etc/docker/daemon.json
-
-sudo mkdir -p /etc/docker
-sudo mv $TEMPLATE_DIR/docker-daemon.json /etc/docker/daemon.json
 sudo chown root:root /etc/docker/daemon.json
 
 # Enable docker daemon to start on boot.
