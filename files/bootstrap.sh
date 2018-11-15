@@ -114,7 +114,6 @@ DNS_CLUSTER_IP=10.100.0.10
 if [[ "$TEN_RANGE" != "0" ]] ; then
   DNS_CLUSTER_IP=172.20.0.10;
 fi
-sed -i s,_CLUSTER_DNS_,$DNS_CLUSTER_IP,g /var/lib/kubelet/kubelet-configuration.yaml
 
 KUBELET_CONFIG=/etc/kubernetes/kubelet/kubelet-config.json
 echo "$(jq .clusterDNS=[\"$DNS_CLUSTER_IP\"] $KUBELET_CONFIG)" > $KUBELET_CONFIG
