@@ -25,13 +25,18 @@ For more information, see [Authentication](https://www.packer.io/docs/builders/a
 in the Packer documentation.
 
 ## Building the AMI
+Packer is run using docker-compose, thus install it into your virtualenv (using virtualenvwrapper)
+```bash
+workon docker-compose
+pip install docker-compose
+```
 
 A Makefile is provided to build the AMI, but it is just a small wrapper around
 invoking Packer directly. You can initiate the build process by running the
 following command in the root of this repository:
 
 ```bash
-make
+AWS_DEFAULT_REGION=<what you want> make
 ```
 
 The Makefile runs Packer with the `eks-worker-bionic.json` build specification

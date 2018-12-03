@@ -1,6 +1,6 @@
 {
   "variables": {
-    "aws_region": "eu-west-1",
+    "aws_region": "us-west-2",
     "build_tag": "",
     "ami_name": "bionic-eks-node",
     "binary_bucket_name": "amazon-eks",
@@ -34,6 +34,8 @@
       "spot_price_auto_product": "Linux/UNIX (Amazon VPC)",
       "ssh_username": "ubuntu",
       "ssh_pty": true,
+      "encrypt_boot": "{{user `encrypted`}}",
+      "kms_key_id": "{{user `kms_key_id`}}",
       "run_tags": {
           "creator": "{{user `creator`}}"
       },
