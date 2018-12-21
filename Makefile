@@ -16,23 +16,25 @@ SOURCE_AMI_ID ?= $(shell aws ec2 describe-images \
 		Name=state,Values=available \
 	--query 'max_by(Images[], &CreationDate).ImageId')
 
-AWS_DEFAULT_REGION = us-west-2
+AWS_DEFAULT_REGION ?= us-west-2
 
 .PHONY: all validate ami 1.11 1.10
 
 all: 1.11
 
 validate:
-	packer validate eks-worker-al2.json
+	docker-compose run --rm -T packer validate eks-worker-al2.json
 
 1.10: validate
-	packer build \
+	docker-compose run --rm -T packer build \
+		-var aws_region=${AWS_DEFAULT_REGION} \
 		-var binary_bucket_path=1.10.11/2018-12-06/bin/linux/amd64 \
 		-var source_ami_id=$(SOURCE_AMI_ID) \
 		eks-worker-al2.json
 
 1.11: validate
-	packer build \
+	docker-compose run --rm -T packer build \
+		-var aws_region=${AWS_DEFAULT_REGION} \
 		-var binary_bucket_path=1.11.5/2018-12-06/bin/linux/amd64 \
 		-var source_ami_id=$(SOURCE_AMI_ID) \
 		eks-worker-al2.json
