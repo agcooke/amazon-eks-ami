@@ -14,11 +14,6 @@ configured so that Packer can make calls to AWS API operations on your behalf.
 For more information, see [Authentication](https://www.packer.io/docs/builders/amazon.html#specifying-amazon-credentials)
 in the Packer documentation.
 
-**Note**
-The default instance type to build this AMI is an `m4.large` and does not
-qualify for the AWS free tier. You are charged for any instances created
-when building this AMI.
-
 ## Building the AMI
 
 A Makefile is provided to build the AMI, but it is just a small wrapper around
@@ -26,8 +21,21 @@ invoking Packer directly. You can initiate the build process by running the
 following command in the root of this repository:
 
 ```bash
-make
+AWS_DEFAULT_REGION=<what you want> make
 ```
+
+### Using docker compose.
+Packer can be run using docker-compose, thus install it into your virtualenv (using virtualenvwrapper)
+```bash
+workon docker-compose
+pip install docker-compose
+```
+Run
+
+```bash
+USE_COMPOSE=true AWS_DEFAULT_REGION=<what you want> make
+```
+### Packer
 
 The Makefile runs Packer with the `eks-worker-al2.json` build specification
 template and the [amazon-ebs](https://www.packer.io/docs/builders/amazon-ebs.html)

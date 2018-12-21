@@ -1,5 +1,3 @@
-KUBERNETES_VERSION ?= 1.10.3
-
 DATE ?= $(shell date +%Y-%m-%d)
 
 # Defaults to Amazon Linux 2 LTS AMI
@@ -17,23 +15,30 @@ SOURCE_AMI_ID ?= $(shell aws ec2 describe-images \
 	--query 'max_by(Images[], &CreationDate).ImageId')
 
 AWS_DEFAULT_REGION ?= us-west-2
+USE_COMPOSE ?= false
+
+ifeq ($(USE_COMPOSE), true)
+	PACKER := docker-compose run --rm -T packer
+else
+	PACKER := packer
+endif
 
 .PHONY: all validate ami 1.11 1.10
 
 all: 1.11
 
 validate:
-	docker-compose run --rm -T packer validate eks-worker-al2.json
+	$(PACKER) validate eks-worker-al2.json
 
 1.10: validate
-	docker-compose run --rm -T packer build \
+	$(PACKER) build \
 		-var aws_region=${AWS_DEFAULT_REGION} \
 		-var binary_bucket_path=1.10.11/2018-12-06/bin/linux/amd64 \
 		-var source_ami_id=$(SOURCE_AMI_ID) \
 		eks-worker-al2.json
 
 1.11: validate
-	docker-compose run --rm -T packer build \
+	$(PACKER) build \
 		-var aws_region=${AWS_DEFAULT_REGION} \
 		-var binary_bucket_path=1.11.5/2018-12-06/bin/linux/amd64 \
 		-var source_ami_id=$(SOURCE_AMI_ID) \
