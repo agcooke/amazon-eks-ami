@@ -13,7 +13,8 @@
     "encrypted": "false",
     "kms_key_id": "",
     "cni_version": "v0.6.0",
-    "cni_plugin_version": "v0.7.4"
+    "cni_plugin_version": "v0.7.4",
+    "docker_ebs_name": "/dev/sdf"
   },
 
   "builders": [
@@ -35,6 +36,20 @@
       "instance_type": "{{user `instance_type`}}",
       "spot_price": "auto",
       "spot_price_auto_product": "Linux/UNIX (Amazon VPC)",
+      "launch_block_device_mappings": [
+        {
+          "device_name": "/dev/xvda",
+          "volume_type": "gp2",
+          "volume_size": 20,
+          "delete_on_termination": true
+        },
+        {
+          "device_name": "{{user `docker_ebs_name`}}",
+          "volume_type": "gp2",
+          "volume_size": 64,
+          "delete_on_termination": true
+        }
+      ],
       "ssh_username": "ec2-user",
       "ssh_pty": true,
       "encrypt_boot": "{{user `encrypted`}}",
@@ -63,6 +78,14 @@
       "type": "file",
       "source": "./files/",
       "destination": "/tmp/worker/"
+    },
+    {
+      "type": "shell",
+      "script": "setup_docker_ebs.sh",
+      "environment_vars": [
+        "DOCKER_EBS_NAME={{user `docker_ebs_name`}}",
+        "FSTYPE=ext4"
+      ]
     },
     {
       "type": "shell",
